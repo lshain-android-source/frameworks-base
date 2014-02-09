@@ -1411,9 +1411,17 @@ public final class PowerManagerService extends IPowerManager.Stub
         if (isMaximumScreenOffTimeoutFromDeviceAdminEnforcedLocked()) {
             timeout = Math.min(timeout, mMaximumScreenOffTimeoutFromDeviceAdmin);
         }
+
         if (mUserActivityTimeoutOverrideFromWindowManager >= 0) {
             timeout = (int)Math.min(timeout, mUserActivityTimeoutOverrideFromWindowManager);
         }
+
+	// -1 永不待机设置
+	if( timeout < 0 )
+	{
+	    timeout = mMaximumScreenOffTimeoutFromDeviceAdmin;
+	}
+
         return Math.max(timeout, MINIMUM_SCREEN_OFF_TIMEOUT);
     }
 
