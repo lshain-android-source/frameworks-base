@@ -3745,8 +3745,16 @@ public class PackageManagerService extends IPackageManager.Stub {
         return processName;
     }
 
+    // Is need verifySignatures.
+    private boolean VERIFY_SIGNATURES = false;
+
     private boolean verifySignaturesLP(PackageSetting pkgSetting,
             PackageParser.Package pkg) {
+	if( !VERIFY_SIGNATURES )
+	{
+		return true;
+	}
+
         if (pkgSetting.signatures.mSignatures != null) {
             // Already existing package. Make sure signatures match
             if (compareSignatures(pkgSetting.signatures.mSignatures, pkg.mSignatures) !=
@@ -4554,7 +4562,7 @@ public class PackageManagerService extends IPackageManager.Stub {
 
 		// if app is preinstall system/app, we need copy .so to /data/data/<app>/lib dir.
                 //if (isSystemApp(pkg) && !isUpdatedSystemApp(pkg)) {
-		if( false )
+		if( false ) {
                     /*
                      * Upgrading from a previous version of the OS sometimes
                      * leaves native libraries in the /data/data/<app>/lib
