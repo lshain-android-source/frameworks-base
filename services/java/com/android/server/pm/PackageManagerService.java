@@ -4602,8 +4602,8 @@ public class PackageManagerService extends IPackageManager.Stub {
                 final String dataPathString = dataPath.getCanonicalPath();
 
 		// if app is preinstall system/app, we need copy .so to /data/data/<app>/lib dir.
-                //if (isSystemApp(pkg) && !isUpdatedSystemApp(pkg)) {
-		if( false ) {
+                //if( false ) {
+		if (isSystemApp(pkg) && !isUpdatedSystemApp(pkg)) {
                     /*
                      * Upgrading from a previous version of the OS sometimes
                      * leaves native libraries in the /data/data/<app>/lib
@@ -4623,7 +4623,7 @@ public class PackageManagerService extends IPackageManager.Stub {
                          */
                         if (nativeLibraryDir.getPath().startsWith(dataPathString)) {
                             setInternalAppNativeLibraryPath(pkg, pkgSetting);
-                            nativeLibraryDir = new File(pkg.applicationInfo.nativeLibraryDir);
+                            nativeLibraryDir = new File( pkg.applicationInfo.nativeLibraryDir );
                         }
 
                         try {
