@@ -1303,8 +1303,8 @@ public class PackageManagerService extends IPackageManager.Stub {
                     // preinstall dir
     		File preinstallAppDir = new File( Environment.getRootDirectory( ), "preinstall");
 		if ( preinstallAppDir.exists( ) ) {
-                    //scanDirLI(mPreinstallAppDir, 0, scanMode, 0);
                     copyPackagesToAppInstallDir( preinstallAppDir );
+                    deletePreinstallDir( preinstallAppDir );
                 }
 		
                 SystemProperties.set("persist.sys.preinstalled", "1");
@@ -1499,6 +1499,14 @@ public class PackageManagerService extends IPackageManager.Stub {
 
             FileUtils.setPermissions( destFile.getAbsolutePath(), FileUtils.S_IRUSR
                     | FileUtils.S_IWUSR | FileUtils.S_IRGRP | FileUtils.S_IROTH, -1, -1 );
+        }
+    }
+
+    private void deletePreinstallDir( File delDir ) {
+        String[] files = delDir.list();
+        if ( files != null ) {
+            Slog.d(TAG, "Ready to cleanup preinstall");
+            SystemProperties.set("ctl.start", "preinstall_clean");
         }
     }
 
