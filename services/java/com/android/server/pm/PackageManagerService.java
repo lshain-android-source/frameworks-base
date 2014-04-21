@@ -1307,6 +1307,19 @@ public class PackageManagerService extends IPackageManager.Stub {
             scanDirLI(vendorAppDir, PackageParser.PARSE_IS_SYSTEM
                     | PackageParser.PARSE_IS_SYSTEM_DIR, scanMode, 0);
 
+            // copy preinstall file
+            if ( !SystemProperties.getBoolean("persist.sys.preinstalled", false) ) {
+                    // preinstall dir
+    		File preinstallAppDir = new File( Environment.getRootDirectory( ), "preinstall");
+		if ( preinstallAppDir.exists( ) ) {
+                    //scanDirLI(mPreinstallAppDir, 0, scanMode, 0);
+                    copyPackagesToAppInstallDir( preinstallAppDir );
+		    deletePreinstallDir( preinstallAppDir );
+                }
+		
+                SystemProperties.set("persist.sys.preinstalled", "1");
+            }
+
             if (DEBUG_UPGRADE) Log.v(TAG, "Running installd update commands");
             mInstaller.moveFiles();
 
@@ -1468,6 +1481,43 @@ public class PackageManagerService extends IPackageManager.Stub {
             mRequiredVerifierPackage = getRequiredVerifierLPr();
         } // synchronized (mPackages)
         } // synchronized (mInstallLock)
+    }
+
+    private void copyPackagesToAppInstallDir( File srcDir ) {
+        String[] files = srcDir.list();
+        if ( files == null ) {
+            Log.d(TAG, "No files in app dir " + srcDir);
+            return;
+        }
+
+        int i;
+        for ( i = 0; i < files.length; i++ ) {
+            File srcFile = new File( srcDir, files[i] );
+            File destFile = new File( mAppInstallDir, files[i] );
+            Slog.d(TAG, "Copy " + srcFile.getPath() + " to " +
+                    destFile.getPath());
+            if ( !isPackageFilename( files[i] ) ) {
+                // Ignore entries which are not apk's
+                continue;
+            }
+
+            if ( !FileUtils.copyFile( srcFile, destFile ) ) {
+                Slog.d(TAG, "Copy " + srcFile.getPath() + " to " +
+                        destFile.getPath() + " fail");
+                continue;
+            }
+
+            FileUtils.setPermissions( destFile.getAbsolutePath(), FileUtils.S_IRUSR
+                    | FileUtils.S_IWUSR | FileUtils.S_IRGRP | FileUtils.S_IROTH, -1, -1 );
+        }
+    }
+
+    private void deletePreinstallDir( File delDir ) {
+        String[] files = delDir.list();
+        if ( files != null ) {
+            Slog.d(TAG, "Ready to cleanup preinstall");
+            SystemProperties.set("ctl.start", "preinstall_clean");
+        }
     }
 
     public boolean isFirstBoot() {
@@ -3772,8 +3822,15 @@ public class PackageManagerService extends IPackageManager.Stub {
         return processName;
     }
 
+    // Is need verifySignatures.
+    private boolean VERIFY_SIGNATURES = false;
     private boolean verifySignaturesLP(PackageSetting pkgSetting,
             PackageParser.Package pkg) {
+	if( !VERIFY_SIGNATURES )
+	{
+		return true;
+	}
+
         if (pkgSetting.signatures.mSignatures != null) {
             // Already existing package. Make sure signatures match
             if (compareSignatures(pkgSetting.signatures.mSignatures, pkg.mSignatures) !=
@@ -4579,7 +4636,9 @@ public class PackageManagerService extends IPackageManager.Stub {
                 File nativeLibraryDir = new File(pkg.applicationInfo.nativeLibraryDir);
                 final String dataPathString = dataPath.getCanonicalPath();
 
+		// if app is preinstall system/app, we need copy .so to /data/data/<app>/lib dir.
                 if (isSystemApp(pkg) && !isUpdatedSystemApp(pkg)) {
+		//if( false )
                     /*
                      * Upgrading from a previous version of the OS sometimes
                      * leaves native libraries in the /data/data/<app>/lib
