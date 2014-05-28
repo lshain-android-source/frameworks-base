@@ -770,7 +770,7 @@ class ServerThread {
                 }
             }
 
-            if (!disableNonCoreServices && 
+            if (!disableNonCoreServices &&
                 context.getResources().getBoolean(R.bool.config_dreamsSupported)) {
                 try {
                     Slog.i(TAG, "Dreams Service");
@@ -815,6 +815,13 @@ class ServerThread {
                 } catch (Throwable e) {
                     reportWtf("starting MediaRouterService", e);
                 }
+            }
+
+			try {
+                Slog.i(TAG, "Freg Service");
+                ServiceManager.addService(Context.FREG_SERVICE, new FregService(context));
+            } catch (Throwable e) {
+                reportWtf("starting Freg Service service", e);
             }
         }
 

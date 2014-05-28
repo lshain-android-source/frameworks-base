@@ -5987,6 +5987,7 @@ package android.content {
     field public static final java.lang.String DISPLAY_SERVICE = "display";
     field public static final java.lang.String DOWNLOAD_SERVICE = "download";
     field public static final java.lang.String DROPBOX_SERVICE = "dropbox";
+    field public static final java.lang.String FREG_SERVICE = "freg";
     field public static final java.lang.String INPUT_METHOD_SERVICE = "input_method";
     field public static final java.lang.String INPUT_SERVICE = "input";
     field public static final java.lang.String KEYGUARD_SERVICE = "keyguard";
@@ -17778,6 +17779,12 @@ package android.os {
     field public static final int OPEN = 32; // 0x20
   }
 
+  public final class FregService {
+    ctor public FregService(android.os.IFregService);
+    method public int getVal();
+    method public void setVal(int);
+  }
+
   public class Handler {
     ctor public Handler();
     ctor public Handler(android.os.Handler.Callback);
@@ -17850,6 +17857,18 @@ package android.os {
 
   public static abstract interface IBinder.DeathRecipient {
     method public abstract void binderDied();
+  }
+
+  public abstract interface IFregService implements android.os.IInterface {
+    method public abstract int getVal() throws android.os.RemoteException;
+    method public abstract void setVal(int) throws android.os.RemoteException;
+  }
+
+  public static abstract class IFregService.Stub extends android.os.Binder implements android.os.IFregService {
+    ctor public IFregService.Stub();
+    method public android.os.IBinder asBinder();
+    method public static android.os.IFregService asInterface(android.os.IBinder);
+    method public boolean onTransact(int, android.os.Parcel, android.os.Parcel, int) throws android.os.RemoteException;
   }
 
   public abstract interface IInterface {

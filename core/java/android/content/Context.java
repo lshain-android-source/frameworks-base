@@ -1798,7 +1798,7 @@ public abstract class Context {
      * @hide like {@link #stopService(Intent)} but for a specific user.
      */
     public abstract boolean stopServiceAsUser(Intent service, UserHandle user);
-    
+
     /**
      * Connect to an application service, creating it if needed.  This defines
      * a dependency between your application and the service.  The given
@@ -1996,6 +1996,8 @@ public abstract class Context {
      * @see android.app.DownloadManager
      */
     public abstract Object getSystemService(String name);
+
+	public static final String FREG_SERVICE = "freg";
 
     /**
      * Use with {@link #getSystemService} to retrieve a

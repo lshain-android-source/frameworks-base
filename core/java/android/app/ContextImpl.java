@@ -86,6 +86,8 @@ import android.os.IPowerManager;
 import android.os.IUserManager;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.os.IFregService;
+import android.os.FregService;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
@@ -587,6 +589,13 @@ class ContextImpl extends Context {
             public Object createService(ContextImpl ctx) {
                 return new ConsumerIrManager(ctx);
             }});
+
+		registerService(FREG_SERVICE, new ServiceFetcher() {
+			public Object createService(ContextImpl ctx) {
+				IBinder b = ServiceManager.getService(FREG_SERVICE);
+				IFregService service = IFregService.Stub.asInterface(b);
+				return new FregService(service);
+			}});
     }
 
     static ContextImpl getImpl(Context context) {
