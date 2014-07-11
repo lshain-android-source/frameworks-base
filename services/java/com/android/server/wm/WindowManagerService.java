@@ -5183,6 +5183,11 @@ public class WindowManagerService extends IWindowManager.Stub
         ShutdownThread.rebootSafeMode(mContext, confirm);
     }
 
+	@Override
+	public void reboot(final Context context, String reason, boolean confirm){
+		ShutdownThread.reboot( context, reason, confirm );
+	}
+
     @Override
     public void setInputFilter(IInputFilter filter) {
         if (!checkCallingPermission(android.Manifest.permission.FILTER_EVENTS, "setInputFilter()")) {

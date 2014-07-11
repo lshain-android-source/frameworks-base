@@ -260,6 +260,25 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                 }
             });
 
+		// add for reboot
+		mItems.add(
+			new SinglePressAction(
+          		com.android.internal.R.drawable.ic_lock_power_off, //替换成相应的图
+          		R.string.global_action_reboot) { //替换成相应的提示文字
+
+				public void onPress() {
+					mWindowManagerFuncs.reboot( mContext, null, true );
+          		}
+
+         		public boolean showDuringKeyguard() {
+            		return true;
+          		}
+
+         		public boolean showBeforeProvisioning() {
+            		return true;
+          		}
+       		});
+
         // next: airplane mode
         mItems.add(mAirplaneModeOn);
 
