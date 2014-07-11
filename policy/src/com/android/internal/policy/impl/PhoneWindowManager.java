@@ -2980,7 +2980,20 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         final int adjust = sim & SOFT_INPUT_MASK_ADJUST;
 
-        if (!isDefaultDisplay) {
+		if( hasNavBar && attrs.type == TYPE_DISPLAY_OVERLAY 
+			&& ( ( fl & (FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_INSET_DECOR) )
+				== (FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_INSET_DECOR) ) ){
+			Slog.i(TAG, "TYPE_DISPLAY_OVERLAY....FULLSCREEN....");
+			pf.left = df.left = mOverscanScreenLeft;
+			pf.top = df.top = mOverscanScreenTop;
+		    pf.right = df.right = mOverscanScreenLeft + mOverscanScreenWidth;
+			pf.bottom = df.bottom = mOverscanScreenTop + mOverscanScreenHeight;
+			of.left = mUnrestrictedScreenLeft;
+			of.top = mUnrestrictedScreenTop;
+			of.right = mUnrestrictedScreenLeft + mUnrestrictedScreenWidth;
+			of.bottom = mUnrestrictedScreenTop + mUnrestrictedScreenHeight;
+		}
+		else if (!isDefaultDisplay) {
             if (attached != null) {
                 // If this window is attached to another, our display
                 // frame is the same as the one we are attached to.
