@@ -2980,9 +2980,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         final int adjust = sim & SOFT_INPUT_MASK_ADJUST;
 
-		if( hasNavBar && attrs.type == TYPE_DISPLAY_OVERLAY 
-			&& ( ( fl & (FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_INSET_DECOR) )
-				== (FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_INSET_DECOR) ) ){
+		if( hasNavBar 
+		    && attrs.type == TYPE_DISPLAY_OVERLAY 
+			&& ( attrs.custom_flags & CUSTOM_FLAG_FULLSCREEN ) != 0 ) {
+			
 			Slog.i(TAG, "TYPE_DISPLAY_OVERLAY....FULLSCREEN....");
 			pf.left = df.left = mOverscanScreenLeft;
 			pf.top = df.top = mOverscanScreenTop;

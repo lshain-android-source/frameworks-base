@@ -1002,6 +1002,9 @@ public interface WindowManager extends ViewManager {
         })
         public int flags;
 
+		public static final int CUSTOM_FLAG_FULLSCREEN = 0x00000001;
+		public int custom_flags;
+
         /**
          * If the window has requested hardware acceleration, but this is not
          * allowed in the process it is in, then still render it as if it is
@@ -1531,6 +1534,7 @@ public interface WindowManager extends ViewManager {
             out.writeInt(y);
             out.writeInt(type);
             out.writeInt(flags);
+			out.writeInt(custom_flags);
             out.writeInt(privateFlags);
             out.writeInt(softInputMode);
             out.writeInt(gravity);
@@ -1573,6 +1577,7 @@ public interface WindowManager extends ViewManager {
             y = in.readInt();
             type = in.readInt();
             flags = in.readInt();
+			custom_flags = in.readInt();
             privateFlags = in.readInt();
             softInputMode = in.readInt();
             gravity = in.readInt();
@@ -1677,6 +1682,12 @@ public interface WindowManager extends ViewManager {
                 flags = o.flags;
                 changes |= FLAGS_CHANGED;
             }
+
+			if ( custom_flags != o.custom_flags ) {
+		        custom_flags = o.custom_flags;
+				changes |= FLAGS_CHANGED;
+		    }
+
             if (privateFlags != o.privateFlags) {
                 privateFlags = o.privateFlags;
                 changes |= PRIVATE_FLAGS_CHANGED;
@@ -1806,6 +1817,8 @@ public interface WindowManager extends ViewManager {
             sb.append(type);
             sb.append(" fl=#");
             sb.append(Integer.toHexString(flags));
+			sb.append(" cfl=#");
+			sb.append(Integer.toHexString(custom_flags));
             if (privateFlags != 0) {
                 if ((privateFlags & PRIVATE_FLAG_COMPATIBLE_WINDOW) != 0) {
                     sb.append(" compatible=true");

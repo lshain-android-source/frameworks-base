@@ -28744,6 +28744,7 @@ package android.view {
     field public static final float BRIGHTNESS_OVERRIDE_NONE = -1.0f;
     field public static final float BRIGHTNESS_OVERRIDE_OFF = 0.0f;
     field public static final android.os.Parcelable.Creator CREATOR;
+    field public static final int CUSTOM_FLAG_FULLSCREEN = 1; // 0x1
     field public static final int DIM_AMOUNT_CHANGED = 32; // 0x20
     field public static final int FIRST_APPLICATION_WINDOW = 1; // 0x1
     field public static final int FIRST_SUB_WINDOW = 1000; // 0x3e8
@@ -28835,6 +28836,7 @@ package android.view {
     field public static final int TYPE_WALLPAPER = 2013; // 0x7dd
     field public float alpha;
     field public float buttonBrightness;
+    field public int custom_flags;
     field public float dimAmount;
     field public int flags;
     field public int format;
